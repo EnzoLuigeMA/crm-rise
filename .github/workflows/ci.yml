@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # build.js precisa apenas ser sintaticamente válido e gerar config.js com env de teste
+      - name: Valida build.js
+        run: SUPABASE_URL=https://test.supabase.co SUPABASE_ANON_KEY=test node build.js
+
+      # Valida a sintaxe do JSX embutido no index.html
+      - name: Valida JSX do index.html
+        run: node tools/check-jsx.js

@@ -1,0 +1,14 @@
+# Config gerado no deploy (build.js) ou copiado de config.example.js em dev.
+# Nunca commitar credenciais de cliente.
+config.js
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Dependências
+node_modules/
+
+# Logs / OS
+*.log
+.DS_Store
