@@ -1,40 +1,28 @@
 # CRM Rise Hub
 
 CRM single-file (um único `index.html`) em React 18 via CDN + Babel no navegador,
-com backend **Supabase** (Auth + REST). PWA instalável, deploy na **Vercel**.
+com backend **Supabase** (Auth + REST). PWA instalável, deploy estático na **Vercel**.
 
-> Arquitetura proposital: **sem bundler/build step de JS**. Tudo vive em `index.html`
-> e é transpilado pelo Babel-standalone no browser. Não há `package.json`.
+> Arquitetura proposital: **sem bundler e sem build step**. Tudo vive em `index.html`
+> e é transpilado pelo Babel-standalone no browser. Não há `package.json` nem variáveis
+> de ambiente — as credenciais do Supabase da Rise ficam no próprio `index.html`.
 
-## Como funciona o config (multi-cliente)
+## Configuração
 
-As credenciais e o branding **não ficam hardcoded** — vêm de `window.RISE_CONFIG`,
-definido no arquivo `config.js`:
+As credenciais e o branding ficam **fixos no topo do `index.html`** (constantes
+`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `CLIENT_NAME`, etc.). A anon key é pública por
+design — o acesso é protegido pelo **RLS** no Supabase.
 
-- **Produção (Vercel):** `build.js` roda no deploy e gera o `config.js` a partir das
-  variáveis de ambiente do projeto (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `CLIENT_NAME`,
-  `CLIENT_SHORT`, `BRAND_COLOR`, `BRAND_COLOR2`, `LOGO_URL`, `FORMS_URL`).
-- **Desenvolvimento local:** copie o exemplo e preencha:
-
-  ```bash
-  cp config.example.js config.js
-  # edite config.js com a URL e a anon key do seu Supabase
-  ```
-
-  Depois é só abrir o `index.html` no navegador.
-
-> `config.js` está no `.gitignore` — **nunca** commite credenciais de cliente.
-> Se `RISE_CONFIG` não tiver as credenciais, o app mostra uma tela "Configuração ausente".
+> Para apontar para outro banco, basta editar essas constantes no `index.html`.
 
 ## Estrutura
 
 | Arquivo | Papel |
 |---|---|
 | `index.html` | App inteiro (UI + lógica + CSS) |
-| `build.js` | Gera `config.js` a partir das env vars (roda na Vercel) |
-| `config.example.js` | Template do `config.js` para dev local |
-| `vercel.json` | Config de deploy (build + cleanUrls) |
+| `vercel.json` | Deploy estático (cleanUrls) |
 | `manifest.json` + ícones | PWA |
+| `tools/check-jsx.js` | Valida a sintaxe do JSX embutido |
 
 ## Dados / Supabase
 
@@ -43,11 +31,14 @@ Os leads chegam pelo formulário externo (UTMs capturados na URL) e são gravado
 o CRM apenas lê/atualiza. **A lógica de dados e os nomes de campos não devem ser alterados**
 para não quebrar a integração com o formulário.
 
-## Verificação rápida
+## Desenvolvimento local
+
+É só abrir o `index.html` no navegador (ou servir a pasta com qualquer servidor estático).
+
+## Verificação
 
 ```bash
-# valida a sintaxe do JSX embutido no index.html
-node tools/check-jsx.js
+node tools/check-jsx.js   # valida a sintaxe do JSX embutido no index.html
 ```
 
 Veja `ANALISE-ESTRUTURA.md` para o diagnóstico técnico e o roadmap de melhorias.

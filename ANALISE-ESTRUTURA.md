@@ -5,6 +5,13 @@
 > O refactor é uma limpeza *interna* + correção de bugs estruturais, segurança e qualidade.
 > A execução do código será feita em etapas posteriores (este documento é o plano).
 
+> **Atualização (decisão de execução):** optou-se por manter **apenas o CRM original da Rise**,
+> com credenciais e branding **fixos no `index.html`** (banco `ibidukamkkgsurqswsvf`), **sem**
+> multi-tenant via env vars. Por isso a "Fase 1 — ligar o `config.js`" foi **descartada**: o
+> `build.js`/`config.example.js` e a dependência de env vars na Vercel foram **removidos**, e o
+> deploy passou a ser estático puro. As demais melhorias (dedup, ErrorBoundary, acessibilidade,
+> React de produção) foram aplicadas normalmente.
+
 ---
 
 ## 1. Visão geral da arquitetura

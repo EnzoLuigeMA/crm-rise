@@ -22,8 +22,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js" crossorigin="anonymous"></script>
-<!-- Config por cliente: gerado pelo build.js (Vercel) a partir das env vars. Em dev, copie config.example.js -> config.js -->
-<script src="/config.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :focus-visible{outline:2px solid var(--accent-light);outline-offset:2px}
@@ -191,17 +189,14 @@ textarea.form-input{min-height:80px;resize:vertical}
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useCallback, useMemo, useRef, createContext, useContext } = React;
-// Config por cliente vindo do config.js (window.RISE_CONFIG). Mantém os valores atuais
-// como fallback para não quebrar o ambiente já em produção / dev sem config.js.
-const CFG = (typeof window !== 'undefined' && window.RISE_CONFIG) ? window.RISE_CONFIG : {};
-const SUPABASE_URL = CFG.supabaseUrl || 'https://ibidukamkkgsurqswsvf.supabase.co';
-const SUPABASE_ANON_KEY = CFG.supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliaWR1a2Fta2tnc3VycXN3c3ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NjMwMjksImV4cCI6MjA4OTUzOTAyOX0.YRLsf8b8ZNK0w9MXNy27Xz4WoBKV9DzNZfGVWf4zK2E';
-const CLIENT_NAME = CFG.clientName || 'Rise Hub';
-const CLIENT_SHORT = CFG.clientShort || 'CRM';
-const LOGO_URL = CFG.logoUrl || '/icon-192.png';
-const FORMS_URL = CFG.formsUrl || 'https://forms-rise-hub.vercel.app';
-if (CFG.brandColor) document.documentElement.style.setProperty('--accent', CFG.brandColor);
-if (CFG.brandColor2) document.documentElement.style.setProperty('--pink', CFG.brandColor2);
+// CRM original da Rise — credenciais e branding fixos (banco próprio da Rise).
+// A anon key é pública por design; o acesso é protegido pelo RLS no Supabase.
+const SUPABASE_URL = 'https://ibidukamkkgsurqswsvf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliaWR1a2Fta2tnc3VycXN3c3ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NjMwMjksImV4cCI6MjA4OTUzOTAyOX0.YRLsf8b8ZNK0w9MXNy27Xz4WoBKV9DzNZfGVWf4zK2E';
+const CLIENT_NAME = 'Rise Hub';
+const CLIENT_SHORT = 'CRM';
+const LOGO_URL = '/icon-192.png';
+const FORMS_URL = 'https://forms-rise-hub.vercel.app';
 document.title = CLIENT_NAME + ' — CRM';
 const STATUS_CONFIG = {
   novo: { label: 'Novo', color: 'var(--blue)', bg: 'badge-novo' },
@@ -430,12 +425,7 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const rootEl = document.getElementById('root');
-if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
-  rootEl.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:sans-serif;color:#f0eef8;background:#07060e;padding:24px"><div><div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">Configuração ausente</div><div style="color:#908caa;font-size:.85rem">As credenciais do Supabase não foram encontradas. Verifique as variáveis de ambiente na Vercel (ou o arquivo config.js em dev).</div></div></div>';
-} else {
-  ReactDOM.createRoot(rootEl).render(<ErrorBoundary><App/></ErrorBoundary>);
-}
+ReactDOM.createRoot(document.getElementById('root')).render(<ErrorBoundary><App/></ErrorBoundary>);
 
 // ===== PWA: Registra service worker pra ser instalável como app =====
 if ('serviceWorker' in navigator) {
